@@ -73,5 +73,8 @@ If you have run out of energy or time for your project, put a note at the top of
 
 ## Third Party 
 1. $go get github.com/elastic/go-elasticsearch/v8 
-
-
+2. $go get github.com/spf13/viper
+3. $go get gorm.io/gorm
+4. $go get gorm.io/driver/mysql
+5. $go get github.com/go-playground/validator/v10
+6. $go get github.com/gin-gonic/gin
