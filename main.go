@@ -1,35 +1,34 @@
 package main
 
 import (
-	"crypto/tls"
 	"log"
 	"net/http"
 
+	c "github.com/AsrofunNiam/lets-code-elastic-search/configuration"
+
+	"github.com/AsrofunNiam/lets-code-elastic-search/app"
 	"github.com/AsrofunNiam/lets-code-elastic-search/helper"
-	"github.com/olivere/elastic/v7"
+	"github.com/go-playground/validator/v10"
 )
 
 func main() {
-	client, err := elastic.NewClient(
-		elastic.SetURL("https://localhost:9200"),
-		elastic.SetSniff(false),
-		elastic.SetHealthcheck(false),
-		elastic.SetBasicAuth("elastic", "you-credential"), // credential set
-		elastic.SetHttpClient(&http.Client{
-			Transport: &http.Transport{
-				TLSClientConfig: &tls.Config{
-					InsecureSkipVerify: true, // Set disable TLS verification to self-signed
-				},
-			},
-		}),
-	)
+	configuration, err := c.LoadConfig()
 	if err != nil {
-		log.Fatalf("Error creating the client: %s", err)
+		log.Fatalln("Failed at config", err)
 	}
 
-	// search all documents
-	// helper.SearchAllDocuments(client)
+	port := configuration.Port
+	db := app.ConnectDatabase(configuration.User, configuration.Host, configuration.Password, configuration.PortDB, configuration.Db)
+	elasticClient := app.ConnectionElastic(configuration.ElasticHost, configuration.ElasticPort, configuration.ElasticUser, configuration.ElasticPassword)
 
-	// search by name and occupation
-	helper.SearchByNameAndOccupation(client, "John Doe", "Developer")
+	validate := validator.New()
+	router := app.NewRouter(elasticClient, db, validate)
+	server := http.Server{
+		Addr:    ":" + port,
+		Handler: router,
+	}
+	log.Printf("Server is running on port %s", port)
+
+	err = server.ListenAndServe()
+	helper.PanicIfError(err)
 }
