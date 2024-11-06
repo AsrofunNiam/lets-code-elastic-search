@@ -1,9 +1,11 @@
 package domain
 
 import (
+	"encoding/json"
 	"time"
 
 	"github.com/AsrofunNiam/lets-code-elastic-search/model/web"
+	"github.com/olivere/elastic/v7"
 )
 
 type Products []Product
@@ -30,7 +32,6 @@ func (product *Product) ToProductResponse() web.ProductResponse {
 		CreatedByID: product.CreatedByID,
 		UpdatedByID: product.UpdatedByID,
 		UpdatedAt:   product.UpdatedAt,
-
 		Name:        product.Name,
 		Description: product.Description,
 		Image:       product.Image,
@@ -45,4 +46,16 @@ func (products Products) ToProductResponses() []web.ProductResponse {
 		productResponses = append(productResponses, dataVwProduct.ToProductResponse())
 	}
 	return productResponses
+}
+
+func ToElasticProductResponses(hits []*elastic.SearchHit) []web.ProductResponse {
+	var products []web.ProductResponse
+	for _, hit := range hits {
+		var product web.ProductResponse
+		if err := json.Unmarshal(hit.Source, &product); err != nil {
+			continue
+		}
+		products = append(products, product)
+	}
+	return products
 }

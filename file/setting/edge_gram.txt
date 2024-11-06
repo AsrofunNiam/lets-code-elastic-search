@@ -1,0 +1,39 @@
+curl --location --request PUT 'https://localhost:9200/products-second' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Basic YourElasticsearchUsername:YourElasticsearchPassword' \
+--data '{
+  "settings": {
+    "analysis": {
+      "tokenizer": {
+        "edge_ngram_tokenizer": {
+          "type": "edge_ngram",
+          "min_gram": 1,
+          "max_gram": 25,
+          "token_chars": ["letter", "digit"]
+        }
+      },
+      "analyzer": {
+        "edge_ngram_analyzer": {
+          "type": "custom",
+          "tokenizer": "edge_ngram_tokenizer"
+        }
+      }
+    }
+  },
+  "mappings": {
+    "properties": {
+      "name": {
+        "type": "text",
+        "analyzer": "edge_ngram_analyzer"
+      },
+      "id": {
+        "type": "text",
+        "analyzer": "edge_ngram_analyzer"
+      },
+      "description": {
+        "type": "text",
+        "analyzer": "edge_ngram_analyzer"
+      }
+    }
+  }
+}'
