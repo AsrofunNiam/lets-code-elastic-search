@@ -5,6 +5,7 @@ import (
 )
 
 type ProductController interface {
+	FindAll(context *gin.Context)
 	Create(context *gin.Context)
 	Sync(context *gin.Context)
 }

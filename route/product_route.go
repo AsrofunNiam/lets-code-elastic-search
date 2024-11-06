@@ -12,15 +12,16 @@ import (
 
 func ProductRoute(router *gin.Engine, db *gorm.DB, elasticClient *elastic.Client, validate *validator.Validate) {
 
-	creditNoteService := service.NewProductService(
+	productService := service.NewProductService(
 		repository.NewProductRepository(),
 		db,
 		validate,
 		elasticClient,
 	)
-	creditNoteController := controller.NewProductController(creditNoteService)
+	productController := controller.NewProductController(productService)
 
-	router.POST("/elastic/products/process/", creditNoteController.Create)
-	router.POST("/elastic/products/sync/", creditNoteController.Sync)
+	router.GET("/elastic/products", productController.FindAll)
+	router.POST("/elastic/products/process", productController.Create)
+	router.POST("/elastic/products/sync", productController.Sync)
 
 }

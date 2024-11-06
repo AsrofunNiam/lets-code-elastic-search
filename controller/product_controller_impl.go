@@ -19,6 +19,23 @@ func NewProductController(productService service.ProductService) ProductControll
 	}
 }
 
+func (controller *ProductControllerImpl) FindAll(c *gin.Context) {
+	filters := helper.FilterFromQueryString(
+		c,
+		"id.like", "id.eq",
+		"name.like", "name.eq",
+		"description.like", "description.eq",
+	)
+	productResponses := controller.ProductService.FindAll(&filters, c)
+	webResponse := web.WebResponse{
+		Success: true,
+		Message: helper.MessageDataFoundOrNot(productResponses),
+		Data:    productResponses,
+	}
+
+	c.JSON(http.StatusOK, webResponse)
+}
+
 func (controller *ProductControllerImpl) Create(c *gin.Context) {
 	request := web.ProductCreateRequest{}
 	helper.ReadFromRequestBody(c, &request)

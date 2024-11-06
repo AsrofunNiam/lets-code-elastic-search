@@ -76,3 +76,10 @@ If you have run out of energy or time for your project, put a note at the top of
 4. $go get gorm.io/driver/mysql
 5. $go get github.com/go-playground/validator/v10
 6. $go get github.com/gin-gonic/gin
+
+## Default
+1. Query default find data 10 
+2. 
+
+## Set index
+1. Set index open file/setting/edge_gram.txt 

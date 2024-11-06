@@ -1,7 +1,6 @@
 package service
 
 import (
-	"context"
 	"fmt"
 	"net/http"
 
@@ -36,6 +35,26 @@ func NewProductService(
 	}
 }
 
+func (service *ProductServiceImpl) FindAll(filters *map[string]string, c *gin.Context) []web.ProductResponse {
+	ctx := c.Request.Context()
+	indexName := "products" // index set edges_ngram
+
+	searchService, err := helper.ApplyFilterElastic(service.ElasticClient, indexName, filters)
+	if err != nil {
+		helper.SendErrorResponse(c, http.StatusInternalServerError, "Error creating Elasticsearch query: "+err.Error())
+		return nil
+	}
+
+	// Execute search elastic
+	searchResult, err := searchService.Do(ctx)
+	if err != nil {
+		helper.SendErrorResponse(c, http.StatusInternalServerError, "Error executing Elasticsearch query: "+err.Error())
+		return nil
+	}
+
+	return domain.ToElasticProductResponses(searchResult.Hits.Hits)
+}
+
 func (service *ProductServiceImpl) Create(request *web.ProductCreateRequest, c *gin.Context) web.ProductResponse {
 	err := service.Validate.Struct(request)
 	helper.PanicIfError(err)
@@ -57,21 +76,16 @@ func (service *ProductServiceImpl) Create(request *web.ProductCreateRequest, c *
 	return product.ToProductResponse()
 }
 
-func (service *ProductServiceImpl) Delete(id *string, c *gin.Context) {
-	tx := service.DB.Begin()
-	defer helper.CommitOrRollback(tx)
-	service.ProductRepository.Delete(tx, id)
-}
-
 func (service *ProductServiceImpl) Sync(c *gin.Context) {
-	ctx := context.Background()
+	ctx := c.Request.Context()
+
+	// Create bulk request
 	bulkRequest := service.ElasticClient.Bulk()
 	tx := service.DB.Begin()
 	defer helper.CommitOrRollback(tx)
 
+	// Get all products
 	products := service.ProductRepository.FindAll(tx)
-
-	fmt.Println("Sync Products: ", len(products))
 
 	for _, product := range products {
 
@@ -100,4 +114,10 @@ func (service *ProductServiceImpl) Sync(c *gin.Context) {
 
 	fmt.Printf("Indexed %d documents to Elasticsearch\n", len(bulkResponse.Items))
 
+}
+
+func (service *ProductServiceImpl) Delete(id *string, c *gin.Context) {
+	tx := service.DB.Begin()
+	defer helper.CommitOrRollback(tx)
+	service.ProductRepository.Delete(tx, id)
 }
