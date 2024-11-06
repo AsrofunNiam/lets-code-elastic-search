@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/AsrofunNiam/lets-code-elastic-search/helper"
@@ -51,10 +52,11 @@ func (controller *ProductControllerImpl) Create(c *gin.Context) {
 
 func (controller *ProductControllerImpl) Sync(c *gin.Context) {
 
-	controller.ProductService.Sync(c)
+	countData := controller.ProductService.Sync(c)
 	webResponse := web.WebResponse{
 		Success: true,
 		Message: "Process sync product successfully",
+		Data:    fmt.Sprintf("data processed: %d", countData),
 	}
 
 	c.JSON(http.StatusOK, webResponse)

@@ -76,7 +76,7 @@ func (service *ProductServiceImpl) Create(request *web.ProductCreateRequest, c *
 	return product.ToProductResponse()
 }
 
-func (service *ProductServiceImpl) Sync(c *gin.Context) {
+func (service *ProductServiceImpl) Sync(c *gin.Context) int {
 	ctx := c.Request.Context()
 
 	// Create bulk request
@@ -113,6 +113,8 @@ func (service *ProductServiceImpl) Sync(c *gin.Context) {
 	}
 
 	fmt.Printf("Indexed %d documents to Elasticsearch\n", len(bulkResponse.Items))
+
+	return len(bulkResponse.Items)
 
 }
 

@@ -8,6 +8,6 @@ import (
 type ProductService interface {
 	FindAll(filters *map[string]string, c *gin.Context) []web.ProductResponse
 	Create(request *web.ProductCreateRequest, c *gin.Context) web.ProductResponse
-	Sync(c *gin.Context)
+	Sync(c *gin.Context) int
 	Delete(id *string, c *gin.Context)
 }
