@@ -1,4 +1,4 @@
-curl --location --request PUT 'https://localhost:9200/products-second' \
+curl --location --request PUT 'https://localhost:9200/products' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Basic YourElasticsearchUsername:YourElasticsearchPassword' \
 --data '{

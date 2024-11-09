@@ -1,0 +1,11 @@
+curl --location --request PUT 'https://localhost:9200/_reindex' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Basic YourElasticsearchUsername:YourElasticsearchPassword' \
+--data '{
+  "source": {
+    "index": "products"
+  },
+  "dest": {
+    "index": "products-second"
+  }
+}'
