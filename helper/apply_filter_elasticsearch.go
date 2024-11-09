@@ -14,6 +14,7 @@ func ApplyFilterElastic(client *elastic.Client, indexName string, filters *map[s
 
 	for key, value := range *filters {
 
+		value = strings.ToLower(value)
 		keyParts := strings.Split(key, ".")
 		fieldName := keyParts[0]
 		operator := keyParts[1]
