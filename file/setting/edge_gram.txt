@@ -15,7 +15,13 @@ curl --location --request PUT 'https://localhost:9200/products-second' \
       "analyzer": {
         "edge_ngram_analyzer": {
           "type": "custom",
-          "tokenizer": "edge_ngram_tokenizer"
+          "tokenizer": "edge_ngram_tokenizer",
+          "filter": ["lowercase"]
+        },
+        "standard_lowercase_analyzer": {
+          "type": "custom",
+          "tokenizer": "standard", 
+          "filter": ["lowercase"]
         }
       }
     }
@@ -24,15 +30,42 @@ curl --location --request PUT 'https://localhost:9200/products-second' \
     "properties": {
       "name": {
         "type": "text",
-        "analyzer": "edge_ngram_analyzer"
+        "fields": {
+          "ngram": { 
+            "type": "text",
+            "analyzer": "edge_ngram_analyzer"
+          },
+          "standard_lowercase": { 
+            "type": "text",
+            "analyzer": "standard_lowercase_analyzer"  
+          }
+        }
       },
       "id": {
         "type": "text",
-        "analyzer": "edge_ngram_analyzer"
+        "fields": {
+          "ngram": { 
+            "type": "text",
+            "analyzer": "edge_ngram_analyzer"
+          },
+          "standard_lowercase": { 
+            "type": "text",
+            "analyzer": "standard_lowercase_analyzer"
+          }
+        }
       },
       "description": {
         "type": "text",
-        "analyzer": "edge_ngram_analyzer"
+        "fields": {
+          "ngram": { 
+            "type": "text",
+            "analyzer": "edge_ngram_analyzer"
+          },
+          "standard_lowercase": { 
+            "type": "text",
+            "analyzer": "standard_lowercase_analyzer"
+          }
+        }
       }
     }
   }
