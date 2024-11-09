@@ -44,7 +44,7 @@ func ConnectDatabase(user, host, password, port, db string) *gorm.DB {
 
 func ConnectionElastic(host, port, user, password string) *elastic.Client {
 	client, err := elastic.NewClient(
-		elastic.SetURL("https://"+host+":"+port),
+		elastic.SetURL("http://"+host+":"+port),
 		elastic.SetSniff(false),
 		elastic.SetHealthcheck(false),
 		elastic.SetBasicAuth(user, password),
