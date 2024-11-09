@@ -67,9 +67,9 @@ For open source projects, say how it is licensed.
 If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
  
 ## Go version 
-1. $go version go1.22.4
+1. $go version > go1.21.0
 
-## Third Party 
+## Third-party lib
 1. $go get github.com/elastic/go-elasticsearch/v8 
 2. $go get github.com/spf13/viper
 3. $go get gorm.io/gorm
@@ -79,7 +79,9 @@ If you have run out of energy or time for your project, put a note at the top of
 
 ## Default
 1. Query default find data 10 
-2. 
 
 ## Set index
-1. Set index open file/setting/edge_gram.txt 
+1. Set index open file/setting/edge_gram.txt
+
+## Documentation API
+https://app.swaggerhub.com/apis/lets_code/elastic/1.0.0
