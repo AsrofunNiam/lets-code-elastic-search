@@ -11,6 +11,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"github.com/olivere/elastic/v7"
+	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 )
 
@@ -109,6 +110,7 @@ func (service *ProductServiceImpl) Sync(c *gin.Context) int {
 	// Execute bulk request
 	bulkResponse, err := bulkRequest.Do(ctx)
 	if err != nil {
+		helper.LogToElasticsearch("bulk request sales failed", "Error", logrus.Fields{"execute": "product sync"}, service.ElasticClient)
 		helper.SendErrorResponse(c, http.StatusNotFound, "bulk request failed : %"+err.Error())
 	}
 

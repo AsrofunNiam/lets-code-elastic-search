@@ -90,5 +90,8 @@ If you have run out of energy or time for your project, put a note at the top of
 5. $go get github.com/go-playground/validator/v10
 6. $go get github.com/gin-gonic/gin
 
+## Implement centralized logger
+1. $go get github.com/sirupsen/logrus
+
 
 

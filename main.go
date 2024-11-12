@@ -3,8 +3,10 @@ package main
 import (
 	"log"
 	"net/http"
+	"os"
 
 	c "github.com/AsrofunNiam/lets-code-elastic-search/configuration"
+	"github.com/sirupsen/logrus"
 
 	"github.com/AsrofunNiam/lets-code-elastic-search/app"
 	"github.com/AsrofunNiam/lets-code-elastic-search/helper"
@@ -16,6 +18,11 @@ func main() {
 	if err != nil {
 		log.Fatalln("Failed at config", err)
 	}
+
+	// Initialize set logger
+	logrus.SetFormatter(&logrus.JSONFormatter{})
+	logrus.SetLevel(logrus.InfoLevel)
+	logrus.SetOutput(os.Stdout)
 
 	port := configuration.Port
 	db := app.ConnectDatabase(configuration.User, configuration.Host, configuration.Password, configuration.PortDB, configuration.Db)
